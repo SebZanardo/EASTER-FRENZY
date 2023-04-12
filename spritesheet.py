@@ -1,15 +1,16 @@
 import pygame
 
+
 COLOUR_KEY = (255,0,255) # RGB value will not appear when drawing sprites
 
 class SpriteSheet:
     def __init__(self, file_path: str, sprite_width: int, sprite_height: int) -> None:
+        '''Holds a spritesheet and associated sprite surfaces'''
         self.file_path = file_path
         self.sprite_width = sprite_width
         self.sprite_height = sprite_height
 
         self.sprite_sheet = pygame.image.load(file_path).convert_alpha()
-        self.sprites = self.slice_sheet()
 
     def slice_sheet(self) -> dict[pygame.Surface]:
         '''Returns a dictionary of all sprites in the sprite sheet'''
