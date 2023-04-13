@@ -1,8 +1,18 @@
-FPS = 2000
-WINDOW_WIDTH = 720
-WINDOW_HEIGHT = 720
+import math
+
+
+FPS = 120
+WINDOW_WIDTH = 320*2
+WINDOW_HEIGHT = 180*2
 WINDOW_CAPTION = "Easter Game"
 
 # Colours
 PARTICLE_COLOURS = [(237, 176, 181), (243, 217, 184), (247, 246, 188), (194, 244, 199), (187, 217, 244)]
 CHECK_COLOURS = [(60,60,60), (70,70,70)]
+
+#Game prop
+MAP_SIZE=(40,40)
+TILE_SIZE=40
+
+#Movement
+NORMALIZER_CONST = math.sin(math.pi/4)

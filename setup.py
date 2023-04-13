@@ -1,7 +1,7 @@
 import pygame
 
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_CAPTION
-from spritesheet import SpriteSheet
+from helper.spritesheet import SpriteSheet
 
 
 pygame.init()
@@ -17,7 +17,15 @@ clock = pygame.time.Clock()
 FONT = pygame.font.Font("assets/nokiafc22.ttf", 20)
 
 # Load Images, Spritesheets and Animations
-BUNNY_SPRITESHEET = SpriteSheet("assets/player-Sheet.png", 64, 64).slice_sheet()
+BUNNY_SPRITESHEET = SpriteSheet("assets/player-Sheet.png", (64, 64), flip=True).slice_sheet()
+BUNNY_ANIMATION = {"idle": [BUNNY_SPRITESHEET[i] for i in range(0,4)], "run":[BUNNY_SPRITESHEET[i] for i in range(4,8)]}
+
+ENEMY_SPRITESHEET = SpriteSheet("assets/spider-Sheet.png", (64,64), flip=True).slice_sheet()
+ENEMY_ANIMATION = {"run": [ENEMY_SPRITESHEET[i] for i in range(0,3)]}
+
+EGG_SPRITESHEET = SpriteSheet("assets/egg-Sheet.png", (32, 32), (40,40)).slice_sheet()
+
+NEST_SPRITE = SpriteSheet("assets/nest.png", (64,32), (128,64)).get_sprite(0,0)
 
 # Load Audio
 # TODO: Add audio
