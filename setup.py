@@ -36,7 +36,7 @@ BUNNY_ANIMATION = {"idle": [BUNNY_SPRITESHEET[i] for i in range(0,4)], "run":[BU
 BUNNY_DASH_SPRITES = [BUNNY_SPRITESHEET[i] for i in range(11, 15)]
 
 ENEMY_SPRITESHEET = SpriteSheet("assets/spider-Sheet.png", (64,64), flip=True).slice_sheet()
-ENEMY_ANIMATION = {"run": [ENEMY_SPRITESHEET[i] for i in range(0,4)], "carry": [ENEMY_SPRITESHEET[i] for i in range(4,8)], "hit": [ENEMY_SPRITESHEET[8], ENEMY_SPRITESHEET[0]]}
+ENEMY_ANIMATION = {"run": [ENEMY_SPRITESHEET[i] for i in range(0,4)], "carry": [ENEMY_SPRITESHEET[i] for i in range(4,8)], "hit": [ENEMY_SPRITESHEET[8], ENEMY_SPRITESHEET[0]], "scatter": [ENEMY_SPRITESHEET[i] for i in range(9,13)]}
 
 EGG_SPRITESHEET = SpriteSheet("assets/egg-Sheet.png", (32, 32), (40,40)).slice_sheet()
 BOOMERANG_SPRITESHEET = SpriteSheet("assets/boomerang-Sheet.png", (32, 32)).slice_sheet()
