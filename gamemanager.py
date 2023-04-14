@@ -1,8 +1,8 @@
 import time
 import pygame
 
-from constants import FPS
-from setup import surface, window, clock, FONT, WINDOW_WIDTH, WINDOW_HEIGHT
+from constants import FPS, COLOUR_KEY
+from setup import game_surface, window, clock, FONT, WINDOW_WIDTH, WINDOW_HEIGHT
 from scenes import Menu, Game
 
 
@@ -27,8 +27,10 @@ class GameManager:
 
             # Render
             # window.fill((0,0,0)) # not needed if scene is drawing own background
-            self.current_scene.render(surface)
-            pygame.transform.scale(surface, (WINDOW_WIDTH, WINDOW_HEIGHT), window)
+            self.current_scene.render(game_surface)
+
+            # Draw surfaces to window
+            pygame.transform.scale(game_surface, (WINDOW_WIDTH, WINDOW_HEIGHT), window)
 
             window.blit(fps_text, (0,0))
 

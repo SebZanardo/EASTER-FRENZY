@@ -10,7 +10,7 @@ from game_elements.egg import Egg
 from game_elements.nest import Nest
 
 
-from setup import SCALE_FACTOR, CROSSHAIR_SPRITE
+from setup import SCALE_FACTOR, CROSSHAIR_SPRITE, FONT
 
 
 class Menu(Scene):
@@ -19,16 +19,20 @@ class Menu(Scene):
         # TODO: Add scene variables here
         pygame.mouse.set_visible(True)
 
+        self.instruction_text = FONT.render("Press <ENTER> key to start", False, (255,255,255))
+        self.instruction_text_rect = self.instruction_text.get_rect(center=(SURFACE_WIDTH/2, SURFACE_HEIGHT-50))
+
     def handle_event(self, event):
-        if event.type == pygame.KEYDOWN and event.key==pygame.K_RETURN:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
             print("Switching to GAME")
             self.game_manager.switch_scene(Game)
 
     def update(self, dt):
         pass
 
-    def render(self, surface):
-        surface.fill((255,0,0))
+    def render(self, game_surface):
+        game_surface.fill((255,0,0))
+        game_surface.blit(self.instruction_text, self.instruction_text_rect)
 
 
 

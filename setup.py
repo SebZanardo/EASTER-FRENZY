@@ -1,6 +1,6 @@
 import pygame
 
-from constants import SURFACE_WIDTH, SURFACE_HEIGHT, WINDOW_CAPTION
+from constants import SURFACE_WIDTH, SURFACE_HEIGHT, WINDOW_CAPTION, COLOUR_KEY
 from spritesheet import SpriteSheet
 
 
@@ -19,7 +19,7 @@ if monitor_aspect>surface_aspect:
 else:
   WINDOW_WIDTH, WINDOW_HEIGHT = MONITOR_WIDTH, (MONITOR_WIDTH/SURFACE_WIDTH)*SURFACE_HEIGHT
 
-surface = pygame.Surface((SURFACE_WIDTH, SURFACE_HEIGHT), pygame.SRCALPHA)
+game_surface = pygame.Surface((SURFACE_WIDTH, SURFACE_HEIGHT), pygame.SRCALPHA)
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 SCALE_FACTOR=SURFACE_WIDTH/WINDOW_WIDTH
@@ -36,7 +36,7 @@ BUNNY_ANIMATION = {"idle": [BUNNY_SPRITESHEET[i] for i in range(0,4)], "run":[BU
 BUNNY_DASH_SPRITES = [BUNNY_SPRITESHEET[i] for i in range(11, 15)]
 
 ENEMY_SPRITESHEET = SpriteSheet("assets/spider-Sheet.png", (64,64), flip=True).slice_sheet()
-ENEMY_ANIMATION = {"run": [ENEMY_SPRITESHEET[i] for i in range(0,4)], "carry": [ENEMY_SPRITESHEET[i] for i in range(4,8)], "hit": [ENEMY_SPRITESHEET[8], ENEMY_SPRITESHEET[8]]}
+ENEMY_ANIMATION = {"run": [ENEMY_SPRITESHEET[i] for i in range(0,4)], "carry": [ENEMY_SPRITESHEET[i] for i in range(4,8)], "hit": [ENEMY_SPRITESHEET[8], ENEMY_SPRITESHEET[0]]}
 
 EGG_SPRITESHEET = SpriteSheet("assets/egg-Sheet.png", (32, 32), (40,40)).slice_sheet()
 BOOMERANG_SPRITESHEET = SpriteSheet("assets/boomerang-Sheet.png", (32, 32)).slice_sheet()

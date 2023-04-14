@@ -25,9 +25,12 @@ class Enemy(AnimObj):
         self.dist_thresh=20**2
         self.holding=False
 
-        self.dynamic=True
-        self.is_dead=False
-        self.speed=100
+        self.dynamic = True
+        self.is_dead = False
+        self.is_dying = False
+        self.dying_timer = 0.2
+        self.speed = 100
+        self.carry_speed = 60
 
 
     def find_closest_egg(self):
@@ -38,13 +41,14 @@ class Enemy(AnimObj):
             if (cur_min==None or dist[i]<cur_min) and self.eggs_ref[i].state<2:
                 cur_min, index = dist[i], i
 
-        return  index
+        return index
 
 
     def update(self,dt):
         if self.weapon_ref.state==1:
             if point_rect_col(self.weapon_ref.pos, (self.pos[0]-self.offset[0], self.pos[1]-self.offset[1], *self.collider_size)):
-                self.is_dead=True
+                self.is_dying=True
+                self.state = "hit"
 
                 if self.holding:
                     self.eggs_ref[self.target_egg_index].state=1
@@ -62,11 +66,14 @@ class Enemy(AnimObj):
 
 
 
-        if self.dynamic:
+        if self.dynamic and not self.is_dying:
             self.anim_tick+=dt
-            self.pos[0]+=self.rotUV[0]*dt*self.speed
-            self.pos[1]+=self.rotUV[1]*dt*self.speed
-
+            if not self.holding:
+                self.pos[0]+=self.rotUV[0]*dt*self.speed
+                self.pos[1]+=self.rotUV[1]*dt*self.speed
+            else:
+                self.pos[0]+=self.rotUV[0]*dt*self.carry_speed
+                self.pos[1]+=self.rotUV[1]*dt*self.carry_speed
 
         if not self.holding:
             closest=self.find_closest_egg()
@@ -93,6 +100,10 @@ class Enemy(AnimObj):
                 self.eggs_ref[self.target_egg_index].pos=self.pos
                 self.eggs_ref[self.target_egg_index].state=2
 
+        if self.is_dying:
+            self.dying_timer -= dt
+            if self.dying_timer <= 0:
+                self.is_dead = True
 
     def render(self, surface):
         surface.blit(ENEMY_ANIMATION[self.state][ int(self.anim_tick/self.anim_rate)%(len(ENEMY_ANIMATION[self.state])-1)  ][self.facing]  ,
