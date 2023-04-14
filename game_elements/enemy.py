@@ -97,7 +97,7 @@ class Enemy(AnimObj):
                     self.random_pos = self.find_random_pos()
                     rot= math.atan2((self.pos[1]-self.random_pos[1]), (self.pos[0]-self.random_pos[0]) )
                     self.rotUV=[-math.cos(rot), -math.sin(rot)]
-                    if self.rotUV[0]<0: self.facing=1
+                    self.facing = int(self.rotUV[0]<0)
 
             # Head to egg
             else:
@@ -108,7 +108,7 @@ class Enemy(AnimObj):
 
                 rot= math.atan2((self.pos[1]-self.target_egg_pos[1]), (self.pos[0]-self.target_egg_pos[0]) )
                 self.rotUV=[-math.cos(rot), -math.sin(rot)]
-                if self.rotUV[0]<0: self.facing=1
+                self.facing = int(self.rotUV[0]<0)
 
 
             if self.state == States.SEARCHING and ((self.pos[0]-self.target_egg_pos[0])**2 + (self.pos[1]-self.target_egg_pos[1])**2) <self.dist_thresh :
@@ -125,7 +125,7 @@ class Enemy(AnimObj):
                 self.random_pos = self.find_random_pos()
                 rot= math.atan2((self.pos[1]-self.random_pos[1]), (self.pos[0]-self.random_pos[0]) )
                 self.rotUV=[-math.cos(rot), -math.sin(rot)]
-                if self.rotUV[0] < 0: self.facing=1
+                self.facing = int(self.rotUV[0]<0)
 
         if self.state == States.DYING:
             self.dying_timer -= dt
