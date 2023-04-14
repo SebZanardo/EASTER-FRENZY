@@ -21,6 +21,6 @@ class Camera:
                 self.pos=(self.pos_raw[0]+(mouse_pos[0]-self.render_offset[0])/6, 
                             self.pos_raw[1]+(mouse_pos[1]-self.render_offset[1])/6)
 
-        self.render_pos=(self.pos[0]-self.render_offset[0], self.pos[1]-self.render_offset[1])
+        self.render_pos=(round(self.pos[0]-self.render_offset[0]), round(self.pos[1]-self.render_offset[1]))
 
 
