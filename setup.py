@@ -47,6 +47,9 @@ BLOOD_PARTICLES = SpriteSheet("assets/blood-Sheet.png", (16, 16), (32,32)).slice
 PARTCILES = SpriteSheet("assets/particle-Sheet.png", (7,7))
 
 CROSSHAIR_SPRITE = pygame.transform.scale(pygame.image.load("assets/crosshair.png").convert_alpha(), (15, 15))
+COVER_ART = pygame.transform.scale(pygame.image.load("assets/cover_art.png").convert_alpha(), (SURFACE_WIDTH, SURFACE_HEIGHT))
+
+VIGNETTE = pygame.transform.scale(pygame.image.load("assets/vignette.png").convert_alpha(), (SURFACE_WIDTH, SURFACE_HEIGHT))
 
 # Load Audio
 # TODO: Add audio

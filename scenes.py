@@ -10,7 +10,7 @@ from game_elements.egg import Egg
 from game_elements.nest import Nest
 
 
-from setup import SCALE_FACTOR, CROSSHAIR_SPRITE, FONT
+from setup import SCALE_FACTOR, CROSSHAIR_SPRITE, FONT, COVER_ART, VIGNETTE
 
 
 class Menu(Scene):
@@ -30,10 +30,12 @@ class Menu(Scene):
     def update(self, dt):
         pass
 
-    def render(self, game_surface):
-        game_surface.fill((255,0,0))
-        game_surface.blit(self.instruction_text, self.instruction_text_rect)
+    def render(self, surface):
+        surface.fill((255,0,0))
 
+        surface.blit(COVER_ART, (0,0))
+        surface.blit(VIGNETTE, (0,0))
+        surface.blit(self.instruction_text, self.instruction_text_rect)
 
 
 class Game(Scene):
@@ -117,5 +119,7 @@ class Game(Scene):
             enemy.render(surface)
 
         self.active_player.render(surface)
+        surface.blit(VIGNETTE, (0,0))
 
         surface.blit(CROSSHAIR_SPRITE, self.crosshair_rect)
+

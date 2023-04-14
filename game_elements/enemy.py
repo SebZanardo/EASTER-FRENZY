@@ -29,7 +29,7 @@ class Enemy(AnimObj):
         self.is_dead = False
         self.is_dying = False
         self.dying_timer = 0.2
-        self.speed = 100
+        self.speed = 120
         self.carry_speed = 60
 
 
