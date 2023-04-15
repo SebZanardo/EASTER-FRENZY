@@ -12,7 +12,7 @@ https://zen-studios.itch.io/easter-frenzy
 < LEFTMOUSEBUTTON > THROW  
 < SPACE > DASH  
 < F > PICKUP  
-< M > TOGGLE MUSIC
+< M > TOGGLE MUSIC  
 < RETURN > RESTART   
     
 Run MAIN.PY to launch the game.  
