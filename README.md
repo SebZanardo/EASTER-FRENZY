@@ -12,7 +12,7 @@ https://zen-studios.itch.io/easter-frenzy
 < LEFTMOUSEBUTTON > THROW  
 < SPACE > DASH  
 < F > PICKUP  
-< M > CRASH GAME
+< M > CRASH GAME  
 < RETURN > RESTART   
     
 Run MAIN.PY to launch the game.  
