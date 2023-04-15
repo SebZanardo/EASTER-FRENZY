@@ -12,6 +12,7 @@ https://zen-studios.itch.io/easter-frenzy
 < LEFTMOUSEBUTTON > THROW  
 < SPACE > DASH  
 < F > PICKUP  
+< RETURN > RESTART   
     
 Run MAIN.PY to launch the game.  
 note* Must have Pygame Package installed to run
