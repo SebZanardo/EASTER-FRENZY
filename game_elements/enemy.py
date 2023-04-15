@@ -37,8 +37,8 @@ class Enemy(AnimObj):
 
         self.is_dead = False
         self.dying_timer = 0.2
-        self.run_speed = 240
-        self.carry_speed = 120
+        self.run_speed = 120
+        self.carry_speed = 80
         self.patrol_speed = 60
 
 
@@ -107,8 +107,6 @@ class Enemy(AnimObj):
                         self.eggs_ref[self.target_egg_index].state=1
                         self.eggs_ref[self.target_egg_index].pos=self.pos.copy()
                         self.eggs_ref[self.target_egg_index].move_period=0
-
-
 
                     # Blood Particles
                     angular_vel=self.weapon_ref.vel
