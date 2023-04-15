@@ -5,6 +5,8 @@ Theme: Particle Overload / Pastel Colour Palette / Silly Music
 ZeDog - Lead programmer / Audio  
 Zen - Assistant programmer / Artist
 
+https://zen-studios.itch.io/easter-frenzy
+
 # CONTROLS
 < WASD > MOVE  
 < LEFTMOUSEBUTTON > THROW  
