@@ -29,16 +29,18 @@ clock = pygame.time.Clock()
 
 # Load Fonts
 FONT = pygame.font.Font("assets/nokiafc22.ttf", 20)
+SCORE_FONT = pygame.font.Font("assets/nokiafc22.ttf", 30)
 
 # Load Images, Spritesheets and Animations
 BUNNY_SPRITESHEET = SpriteSheet("assets/player-Sheet.png", (64, 64), flip=True).slice_sheet()
-BUNNY_ANIMATION = {"idle": [BUNNY_SPRITESHEET[i] for i in range(0,4)], "run":[BUNNY_SPRITESHEET[i] for i in range(4,10)], "dash":[BUNNY_SPRITESHEET[10], BUNNY_SPRITESHEET[10]]}
+BUNNY_ANIMATION = {"idle": [[BUNNY_SPRITESHEET[i] for i in range(0,4)],   [BUNNY_SPRITESHEET[15], BUNNY_SPRITESHEET[15]]  ], "run":[[BUNNY_SPRITESHEET[i] for i in range(4,10)],    [BUNNY_SPRITESHEET[i] for i in range(15,20)]], "dash":[  [BUNNY_SPRITESHEET[10], BUNNY_SPRITESHEET[10]]  ]}
 BUNNY_DASH_SPRITES = [BUNNY_SPRITESHEET[i] for i in range(11, 15)]
 
 ENEMY_SPRITESHEET = SpriteSheet("assets/spider-Sheet.png", (64,64), flip=True).slice_sheet()
 ENEMY_ANIMATION = {"run": [ENEMY_SPRITESHEET[i] for i in range(0,4)], "carry": [ENEMY_SPRITESHEET[i] for i in range(4,8)], "hit": [ENEMY_SPRITESHEET[8], ENEMY_SPRITESHEET[0]], "scatter": [ENEMY_SPRITESHEET[i] for i in range(9,13)]}
 
 EGG_SPRITESHEET = SpriteSheet("assets/egg-Sheet.png", (32, 32), (40,40)).slice_sheet()
+EGG_SPRITESHEET[len(EGG_SPRITESHEET)]=pygame.transform.scale( pygame.image.load("assets/grey-egg.png").convert_alpha(), (40,40))
 BOOMERANG_SPRITESHEET = SpriteSheet("assets/boomerang-Sheet.png", (32, 32)).slice_sheet()
 
 NEST_SPRITE = pygame.transform.scale(pygame.image.load("assets/nest.png").convert_alpha(), (128,64))
@@ -46,10 +48,32 @@ SHADOW_SPRITE = pygame.image.load("assets/shadow.png").convert_alpha()
 BLOOD_PARTICLES = SpriteSheet("assets/blood-Sheet.png", (16, 16), (32,32)).slice_sheet()
 PARTCILES = SpriteSheet("assets/particle-Sheet.png", (7,7))
 
+SCORE_PARTICLE_SPRITES = [ FONT.render("+10", 0, (255,255,255)), FONT.render("+20", 0, (255,255,255))  ]
+
 CROSSHAIR_SPRITE = pygame.transform.scale(pygame.image.load("assets/crosshair.png").convert_alpha(), (15, 15))
 COVER_ART = pygame.transform.scale(pygame.image.load("assets/cover_art.png").convert_alpha(), (SURFACE_WIDTH, SURFACE_HEIGHT))
 
 VIGNETTE = pygame.transform.scale(pygame.image.load("assets/vignette.png").convert_alpha(), (SURFACE_WIDTH, SURFACE_HEIGHT))
 
-# Load Audio
-# TODO: Add audio
+PARTICLE_SPRITES = SpriteSheet("assets/particle-Sheet.png", (7, 7), (7,7)).slice_sheet()
+
+STAR_PARTICLE_SPRITE = PARTICLE_SPRITES[7]
+
+
+
+
+#Sounds
+PLAYER_WALK_SFX = pygame.mixer.Sound("assets/sfx/walk_sfx.wav")
+PLAYER_WALK_SFX.set_volume(0.4)
+
+ENEMY_DEATH_SFX = (pygame.mixer.Sound("assets/sfx/death_sfx_1.wav"), pygame.mixer.Sound("assets/sfx/death_sfx_2.wav"))
+for i in range(2): ENEMY_DEATH_SFX[i].set_volume(0.6)
+
+THROW_SFX = pygame.mixer.Sound("assets/sfx/throw_sfx.wav")
+THROW_SFX.set_volume(0.6)
+
+BOOMERANG_SFX = pygame.mixer.Sound("assets/sfx/boomerang_sfx.wav")
+BOOMERANG_SFX.set_volume(0.1)
+
+DASH_SFX = pygame.mixer.Sound("assets/sfx/dash_sfx.wav")
+DASH_SFX.set_volume(0.5)

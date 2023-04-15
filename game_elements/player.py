@@ -1,37 +1,43 @@
-from setup import BUNNY_ANIMATION, BOOMERANG_SPRITESHEET
+from setup import BUNNY_ANIMATION, BOOMERANG_SPRITESHEET, PLAYER_WALK_SFX, THROW_SFX, BOOMERANG_SFX, DASH_SFX
 from constants import PARTICLE_COLOURS, NORMALIZER_CONST, SURFACE_WIDTH, SURFACE_HEIGHT
 from gameobject import AnimObj, Collectable
 from game_elements.particles import CircleParticle, DashParticle
 import pygame, random, math
 
 class Player(AnimObj):
-    def __init__(self, pos, camera_ref, particle_ref):
+    def __init__(self, pos, camera_ref, particle_ref, bounds):
         super().__init__(pos, camera_ref, particle_ref, "idle")
 
         self.offset=(32, 32)
 
         self.vel=[0,0]
         self.rot=0
-        self.speed=200
+        self.speed=300
         self.accel=3000
         self.friction_force=8
 
         self.weapon=Boomerang(pos, camera_ref, particle_ref, self.pos)
 
-        self.dash_speed=400
+        self.dash_speed=500
         self.dash_length=0.5
         self.dash_tick=0
         self.dash_freq=0.02
         self.dash_counter=0
 
+        self.holding_egg=0
+
+        self.walk_sfx_freq=0.2
+        self.walk_sfx_tick=0
+
+        self.bounds=( (bounds[0][0]+self.offset[0], bounds[1][0]-self.offset[0]), (bounds[0][1]+self.offset[1], bounds[1][1]-self.offset[1]) )
 
 
-    def update(self, keys, mouse_state, mouse_pos, dt):
-
+    def update(self, keys, pickup_key_event, mouse_state, mouse_pos, dt):
         if self.state=="dash":
             self.dash_tick+=dt
+            self.camera_ref.shake_amount=1.8
             if self.dash_tick/self.dash_freq>=self.dash_counter:
-                self.particle_ref.append(DashParticle(self.camera_ref, self.pos.copy(), 0.15, self.facing))
+                self.particle_ref[0].append(DashParticle(self.camera_ref, self.pos.copy(), 0.15, self.facing))
                 self.dash_counter+=1
 
             if self.dash_length<self.dash_tick:
@@ -39,33 +45,50 @@ class Player(AnimObj):
 
         else:
             self.state="idle"
-            if self.weapon.state!=0 and keys[pygame.K_SPACE]:
+            if self.weapon.state!=0 and self.holding_egg==0 and keys[pygame.K_SPACE]:
                 dash_rot = math.atan2(( mouse_pos[0] - SURFACE_WIDTH/2 ),
                                ( mouse_pos[1] - SURFACE_HEIGHT/2))
+
+                self.camera_ref.shake_fade=8
                 self.vel, self.state, self.dash_tick, self.dash_counter = [math.sin(dash_rot)*self.dash_speed, math.cos(dash_rot)*self.dash_speed], "dash", 0, 0
+
+                pygame.mixer.Channel(4).play(DASH_SFX)
+
             else:
                 self.facing=int(mouse_pos[0]<SURFACE_WIDTH/2)
                 if keys[pygame.K_s]:self.vel[1], self.state = min(self.vel[1]+self.accel*dt, self.speed), "run"
                 if keys[pygame.K_w]:self.vel[1], self.state = max(self.vel[1]-self.accel*dt, -self.speed), "run"
 
-                if keys[pygame.K_d]:self.vel[0], self.state = min(self.vel[0]+self.accel*dt, self.speed), "run"
-                if keys[pygame.K_a]:self.vel[0], self.state = max(self.vel[0]-self.accel*dt, -self.speed), "run"
+                if keys[pygame.K_d]:
+                    self.vel[0], self.state = min(self.vel[0]+self.accel*dt, self.speed), "run"
+                if keys[pygame.K_a]:
+                    self.vel[0], self.state = max(self.vel[0]-self.accel*dt, -self.speed), "run"
+
+            if self.state=="run":
+
+                if self.walk_sfx_tick>self.walk_sfx_freq:
+                    pygame.mixer.Channel(0).play(PLAYER_WALK_SFX)
+                    self.walk_sfx_tick=0
+                else:
+                    self.walk_sfx_tick+=dt
+
+
+
+                for i in range(0):
+                    self.particle_ref[0].append(CircleParticle(self.camera_ref, (self.pos[0], self.pos[1]+25), ( self.vel[0]*-1+random.randint(-50,50), self.vel[1]*-1+random.randint(-250,20) ), (160,160,160), random.randint(2,4), 0.3  ))
 
 
             self.vel[0]-=self.vel[0]*self.friction_force*dt
             self.vel[1]-=self.vel[1]*self.friction_force*dt
 
 
-        self.pos[0]+=self.vel[0]*dt
-        self.pos[1]+=self.vel[1]*dt
-
-        self.weapon.update(keys, mouse_state, mouse_pos, dt)
+        self.pos[0]= max(min(self.pos[0]+self.vel[0]*dt, self.bounds[0][1]), self.bounds[0][0])
+        self.pos[1]= max(min(self.pos[1]+self.vel[1]*dt, self.bounds[1][1]), self.bounds[1][0])
 
 
-        if False:
-            for i in range(15):
-                angle=random.random()/2+self.rot
-                self.particle_ref.append(Particle(self.camera_ref, self.pos.copy(), [math.sin(angle)*random.randint(400,1500), math.cos(angle)*random.randint(400,1500)], PARTICLE_COLOURS[random.randint(0,len(PARTICLE_COLOURS)-1)], random.randint(2,5), 4  ))
+        self.weapon.update(pickup_key_event, mouse_state, mouse_pos, dt)
+
+
 
         self.anim_tick+=dt
 
@@ -73,10 +96,10 @@ class Player(AnimObj):
     def render(self, surface):
         if self.weapon.state==2:
             self.weapon.render(surface)
-            surface.blit(BUNNY_ANIMATION[self.state][ int(self.anim_tick/self.anim_rate)%(len(BUNNY_ANIMATION[self.state])-1)  ][self.facing]  , (self.pos[0]-self.camera_ref.render_pos[0]-self.offset[0], self.pos[1]-self.camera_ref.render_pos[1]-self.offset[1]) )
+            surface.blit(BUNNY_ANIMATION[self.state][self.holding_egg][ int(self.anim_tick/self.anim_rate)%(len(BUNNY_ANIMATION[self.state][self.holding_egg])-1)  ][self.facing]  , (self.pos[0]-self.camera_ref.render_pos[0]-self.offset[0], self.pos[1]-self.camera_ref.render_pos[1]-self.offset[1]) )
 
         else:
-            surface.blit(BUNNY_ANIMATION[self.state][ int(self.anim_tick/self.anim_rate)%(len(BUNNY_ANIMATION[self.state])-1)  ][self.facing]  , (self.pos[0]-self.camera_ref.render_pos[0]-self.offset[0], self.pos[1]-self.camera_ref.render_pos[1]-self.offset[1]) )
+            surface.blit(BUNNY_ANIMATION[self.state][self.holding_egg][ int(self.anim_tick/self.anim_rate)%(len(BUNNY_ANIMATION[self.state][self.holding_egg])-1)  ][self.facing]  , (self.pos[0]-self.camera_ref.render_pos[0]-self.offset[0], self.pos[1]-self.camera_ref.render_pos[1]-self.offset[1]) )
             self.weapon.render(surface)
 
 
@@ -96,7 +119,13 @@ class Boomerang(Collectable):
         self.rot=0
 
 
-    def update(self, keys, mouse_state, mouse_pos, dt):
+        self.spin_sfx_freq=0.3
+        self.spin_sfx_tick=0
+
+
+
+
+    def update(self, pickup_key_event, mouse_state, mouse_pos, dt):
         self.player_prox=False
 
         if self.state==0:
@@ -104,6 +133,7 @@ class Boomerang(Collectable):
             if mouse_state[0]:
                 self.state=1
                 self.pos=self.player_pos_ref.copy()
+
 
                 self.throw_life=2
                 self.throw_tick=0
@@ -114,7 +144,12 @@ class Boomerang(Collectable):
                 self.vel=[math.sin(throw_angle)*self.throw_speed, math.cos(throw_angle)*self.throw_speed]
                 self.return_force=(-self.vel[0], -self.vel[1])
 
+                pygame.mixer.Channel(2).play(THROW_SFX)
+                self.spin_sfx_tick=self.spin_sfx_freq
+
         else:
+            self.player_prox=self.check_collection()
+
             if self.state==1:
                 self.vel[0]+=self.return_force[0]*dt
                 self.vel[1]+=self.return_force[1]*dt
@@ -122,7 +157,7 @@ class Boomerang(Collectable):
                 self.pos[0]+=self.vel[0]*dt
                 self.pos[1]+=self.vel[1]*dt
 
-                self.rot+=dt*400
+                self.rot+=dt*600
 
 
                 if self.throw_life<self.throw_tick:
@@ -130,12 +165,20 @@ class Boomerang(Collectable):
 
                 self.throw_tick+=dt
 
-                for i in range(3):
-                    self.particle_ref.append(CircleParticle(self.camera_ref, self.pos.copy(), [random.randint(-400,400)+self.vel[0]*-2, random.randint(-400,400)+self.vel[1]*-2], PARTICLE_COLOURS[random.randint(0,len(PARTICLE_COLOURS)-1)], random.randint(1,3), 0.5)  )
+                for i in range(round(100*dt)):
+                    self.particle_ref[1].append(CircleParticle(self.camera_ref, self.pos.copy(), [random.randint(-400,400)+self.vel[0]*-2, random.randint(-400,400)+self.vel[1]*-2], PARTICLE_COLOURS[random.randint(0,len(PARTICLE_COLOURS)-1)], random.randint(1,3), 0.5)  )
 
 
-            self.player_prox=self.check_collection()
-            if self.player_prox and keys[pygame.K_f]:
+                #Sound
+                if self.spin_sfx_tick>self.spin_sfx_freq:
+                    pygame.mixer.Channel(3).play(BOOMERANG_SFX)
+                    self.spin_sfx_tick=0
+                else:
+                    self.spin_sfx_tick+=dt
+
+
+
+            if self.player_prox and pickup_key_event:
                 self.state=0
 
 
@@ -145,7 +188,7 @@ class Boomerang(Collectable):
 
     def render(self, surface):
         if self.state==1:
-            rot_sprite=pygame.transform.rotate(self.sprite[0], self.rot)
+            rot_sprite=pygame.transform.rotate(self.sprite[int(self.player_prox)], self.rot)
             surface.blit(rot_sprite, rot_sprite.get_rect(center = (self.pos[0]-self.camera_ref.render_pos[0],
                                                                 self.pos[1]-self.camera_ref.render_pos[1])  ) )
         else:

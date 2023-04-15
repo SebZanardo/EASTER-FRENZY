@@ -41,12 +41,12 @@ class CircleParticle(BaseParticle):
 
 
 class ImageParticle(BaseParticle):
-    def __init__(self, camera_ref, pos, vel, life, sprite):
-        super().__init__(camera_ref, pos, vel, 10, life)
+    def __init__(self, camera_ref, pos, vel, friction, life, sprite):
+        super().__init__(camera_ref, pos, vel, friction, life)
 
         self.sprite=sprite
-        size=sprite.get_size()
-        self.offset=(size[0]/2, size[1]/2)
+        self.size=sprite.get_size()
+        self.offset=(self.size[0]/2, self.size[1]/2)
 
     def render(self, surface):
         surface.blit(self.sprite, (self.pos[0]-self.camera_ref.render_pos[0]-self.offset[0],   self.pos[1]-self.camera_ref.render_pos[1]-self.offset[1]))
@@ -61,6 +61,21 @@ class DashParticle(BaseParticle):
         self.sprite_period=life/6
 
     def render(self, surface):
-        surface.blit(BUNNY_DASH_SPRITES[min(int(self.age/self.sprite_period), 3)   ][self.facing], (self.pos[0]-self.camera_ref.render_pos[0]-self.offset[0],   self.pos[1]-self.camera_ref.render_pos[1]-self.offset[1]))
+        surface.blit(BUNNY_DASH_SPRITES[min(int(self.age/self.sprite_period), 2)   ][self.facing], (self.pos[0]-self.camera_ref.render_pos[0]-self.offset[0],   self.pos[1]-self.camera_ref.render_pos[1]-self.offset[1]))
 
+
+
+class ScoreParticle(ImageParticle):
+    def __init__(self, camera_ref, pos, life, text_sprite):
+        super().__init__(camera_ref, pos, (0,-200), 5, life, text_sprite)
+
+        self.fade_rate=350/life
+        self.fade_tick=0
+
+    def update(self, dt):
+        super().update(dt)
+        self.sprite.set_alpha( min(max(350-self.fade_rate*self.fade_tick, 0), 255)  )
+
+
+        self.fade_tick+=dt
 

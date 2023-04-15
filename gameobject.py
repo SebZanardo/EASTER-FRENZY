@@ -57,7 +57,6 @@ class Collectable(StatObj):
 
         self.player_prox=False
 
-        self.sprite_index=0
         highlight=sprite.copy()
         highlight.blit(sprite_overlay,(0,0))
         self.sprite=[sprite, highlight]
