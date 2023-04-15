@@ -9,7 +9,7 @@ pygame.init()
 # Setup Pygame
 monitor = pygame.display.Info()
 
-MONITOR_WIDTH, MONITOR_HEIGHT = monitor.current_w-100, monitor.current_h-100
+MONITOR_WIDTH, MONITOR_HEIGHT = monitor.current_w, monitor.current_h
 
 monitor_aspect = MONITOR_WIDTH/MONITOR_HEIGHT
 surface_aspect = SURFACE_WIDTH/SURFACE_HEIGHT
