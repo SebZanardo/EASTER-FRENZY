@@ -9,6 +9,7 @@ from scenes import MainMenu, Game
 class GameManager:
     def __init__(self):
         self.current_scene = MainMenu(self) # Set initial scene
+        self.failed_fast_transform = False
 
     def run(self):
         prev_frame_time = time.perf_counter()
@@ -38,7 +39,19 @@ class GameManager:
             self.current_scene.render(game_surface)
 
             # Draw surfaces to window
-            pygame.transform.scale(game_surface, (WINDOW_WIDTH, WINDOW_HEIGHT), window)
+
+            if not self.failed_fast_transform:
+                try:
+                    pygame.transform.scale(game_surface, (WINDOW_WIDTH, WINDOW_HEIGHT), window)
+                except pygame.error:
+                    print("The size and depth of game_surface and window don't match!")
+                    self.failed_fast_transform = True
+
+            if self.failed_fast_transform:
+                mid_surface = pygame.transform.scale(game_surface, (WINDOW_WIDTH, WINDOW_HEIGHT))
+                window.blit(mid_surface, [0, 0])
+
+
 
             window.blit(fps_text, (0,0))
 
