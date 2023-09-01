@@ -17,3 +17,5 @@ https://zen-studios.itch.io/easter-frenzy
     
 Run MAIN.PY to launch the game.  
 note* Must have Pygame Package installed to run
+
+https://www.youtube.com/watch?v=b9OgEY6dMfw&ab_channel=SebZanardo
